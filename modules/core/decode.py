@@ -12,7 +12,7 @@ import binascii
 from bitstring import BitArray
 
 import logging
-from modules.setup_logger import logger
+from modules.core.setup_logger import logger
 
 
 logger = logging.getLogger(__name__)

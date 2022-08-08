@@ -14,7 +14,7 @@ from bitstring import BitArray
 
 from time import sleep
 
-from modules.setup_logger import logger
+from modules.core.setup_logger import logger
 
 
 # SR

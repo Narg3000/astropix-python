@@ -7,7 +7,7 @@ Author: Autumn Bauman
 #from msilib.schema import File
 #from http.client import SWITCHING_PROTOCOLS
 from astropix import astropix2
-import modules.hitplotter as hitplotter
+import modules.analysis.hitplotter as hitplotter
 import os
 import binascii
 import pandas as pd
@@ -16,7 +16,7 @@ import time
 import logging
 import argparse
 
-from modules.setup_logger import logger
+from modules.core.setup_logger import logger
 
 
 # This sets the logger name.

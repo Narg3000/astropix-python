@@ -14,8 +14,8 @@ import logging
 import binascii
 import time
 
-from modules.spi import Spi
-from modules.setup_logger import logger
+from modules.core.spi import Spi
+from modules.core.setup_logger import logger
 
 READ_ADRESS     = 0x00
 WRITE_ADRESS    = 0x01
@@ -349,7 +349,23 @@ class Nexysio(Spi):
         # Set Reset bits 1
         configregister = self.set_bit(self.get_configregister(), 4)
         self.write_register(0, configregister, True)
-        time.sleep(1)
+        time.sleep(.1)
         # Set Reset bits and readback bit 0
         configregister = self.clear_bit(self.get_configregister(), 4)
         self.write_register(0, configregister, True)
+
+
+    # _test_io(): A function to read and write a register on the chip to see if 
+    # everythign is working. 
+    # It takes no arguments 
+        def test_io(self):
+            """
+            Reads and writes from register to ensure connection is working 
+            """
+            try:    # Attempts to write to and read from a register
+                self.write_register(0x09, 0x55, True)
+                self.read_register(0x09)
+                self.spi_reset()
+                self.sr_readback_reset()
+            except Exception: 
+                raise RuntimeError("Could not read or write from astropix!")

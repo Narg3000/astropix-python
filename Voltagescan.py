@@ -15,8 +15,8 @@ import logging
 import binascii
 import time 
 import os
-from modules.pyKeithleyCtl import KeithleySupply as RC
-from modules.setup_logger import logger
+from modules.pyvisa.pyKeithleyCtl import KeithleySupply as RC
+from modules.core.setup_logger import logger
 
 
 datadir = "biasscan_weekend_7-15"

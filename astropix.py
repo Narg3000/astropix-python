@@ -7,11 +7,11 @@ Author: Autumn Bauman
 # Needed modules. They all import their own suppourt libraries, 
 # and eventually there will be a list of which ones are needed to run
 from typing import Dict
-from modules.spi import Spi 
-from modules.nexysio import Nexysio
-from modules.decode import Decode
-from modules.injectionboard import Injectionboard
-from modules.voltageboard import Voltageboard
+from modules.core.spi import Spi 
+from modules.core.nexysio import Nexysio
+from modules.core.decode import Decode
+from modules.core.injectionboard import Injectionboard
+from modules.core.voltageboard import Voltageboard
 from bitstring import BitArray
 from tqdm import tqdm
 import pandas as pd
@@ -21,7 +21,7 @@ import time
 
 # Logging stuff
 import logging
-from modules.setup_logger import logger
+from modules.core.setup_logger import logger
 logger = logging.getLogger(__name__)
 
 
@@ -31,7 +31,7 @@ logger = logging.getLogger(__name__)
 
 
 
-class astropix2:
+class Astropix2:
     # First the global defaults which will be used later
     DACS_CFG = {
             'blres': 0,
@@ -91,7 +91,7 @@ class astropix2:
         self._wait_progress(2)
         # Ensure it is working
         logger.info("Opened FPGA, testing...")
-        self._test_io()
+        self.nexys.test_io()
         logger.info("FPGA test successful.")
         # Start putting the variables in for use down the line
         self.sampleclock_period_ns = clock_period_ns
@@ -245,6 +245,7 @@ class astropix2:
         # Set dacvals
         if dacvals is None:
             dacvals = default_vdac
+            logger.info("Using default vdac settings.")
 
             # dacvals takes precidence over vthreshold
             if vthreshold is not None:
@@ -256,6 +257,7 @@ class astropix2:
                         vthreshold = 1.100
                         logger.error("Threshold value too low, setting to default 100mV")
                 dacvals[1][-1] = vthreshold
+                logger.info(f"Threshold set to {vthreshold-1}mV.")
         # Create object
         self.vboard = Voltageboard(self.handle, slot, dacvals)
         # Set calibrated values
@@ -469,18 +471,6 @@ class astropix2:
 
 # Below here are internal methods used for constructing things and testing
 
-    # _test_io(): A function to read and write a register on the chip to see if 
-    # everythign is working. 
-    # It takes no arguments 
-
-    def _test_io(self):
-        try:    # Attempts to write to and read from a register
-            self.nexys.write_register(0x09, 0x55, True)
-            self.nexys.read_register(0x09)
-            self.nexys.spi_reset()
-            self.nexys.sr_readback_reset()
-        except Exception: 
-            raise RuntimeError("Could not read or write from astropix!")
     
     # _make_digitalconfig(): Constructs the digitalconfig dictionairy. 
     # Takes no arguments currently, and there is no way to update 

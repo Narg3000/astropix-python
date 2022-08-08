@@ -148,6 +148,7 @@ testdat.py
 beam_test_inj.py
 beam_test_old.py
 modules/asic.py
-archive/
+archive/*
 *.csv
 beam_test_play.py
+modules/pyvisa/*
